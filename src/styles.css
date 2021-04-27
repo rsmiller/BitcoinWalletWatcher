@@ -1,0 +1,35 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+footer{
+    margin-top: 75px;
+    text-align: center;
+    font-size: .8em;
+}
+
+.button-row {
+    margin:auto;
+  }
+
+  .button-row button {
+    margin-right: 8px;
+  }
+
+  mat-label
+  {
+    font-weight: bold;
+    display: block;
+  }
+  mat-form-field
+  {
+    margin-bottom: 5px;
+    width: 100%;
+  }
+
+  mat-error{
+    display: block;
+    color: red;
+  }

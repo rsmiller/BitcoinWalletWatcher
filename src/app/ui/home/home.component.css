@@ -1,0 +1,84 @@
+.moneyticker
+{
+    margin-top: 75px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 3.5em;
+    color: #673ab7
+}
+
+.coinbalance
+{
+  text-align: center;
+  font-size: .8em;
+}
+
+.coinbalance2
+{
+  margin-bottom: 75px;
+  text-align: center;
+  font-size: .8em;
+}
+
+.anim
+{
+    animation-name: text-focus-in;
+    animation-duration: .7s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: both;
+}
+
+@keyframes text-focus-in {
+    0%{
+      font-size: 3.5em;
+    }
+    20%{
+      font-size: 3.7em;
+      filter: blur(1px);
+    }
+    100%{
+      font-size: 3.5em;
+      filter: blur(0);
+    }
+  }
+
+.anim-up
+{
+    animation-name: text-focus-anim;
+    animation-duration: .8s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: both;
+    color: green;
+}
+
+.anim-down
+{
+    animation-name: text-focus-anim;
+    animation-duration: .8s;
+    animation-timing-function: linear;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+    animation-direction: normal;
+    animation-fill-mode: both;
+    color: red;
+}
+
+@keyframes text-focus-anim {
+  0%{
+    font-size: 1.2em;
+  }
+  20%{
+    font-size: 1.4em;
+    filter: blur(1px);
+  }
+  100%{
+    font-size: 1.2em;
+    filter: blur(0);
+  }
+}
