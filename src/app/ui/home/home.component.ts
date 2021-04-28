@@ -153,7 +153,7 @@ export class HomeComponent {
         let storageInfo = new AddressStorage();
         storageInfo.wallets = new Array<Wallet>();
         storageInfo.currency = 'USD';
-        storageInfo.currency_symbol = 'USD';
+        storageInfo.currency_symbol = '$';
         this.Storage = storageInfo;
         
         localStorage.setItem("btc_w_w", JSON.stringify(storageInfo));
