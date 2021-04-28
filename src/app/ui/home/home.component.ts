@@ -206,6 +206,8 @@ export class HomeComponent {
         this.NonDumbEtherFinalBalance = this.ConvertWeiToNonDumbNumber(result.result);
 
         let theWei = this.GetWeiFromExchange(result.result);
+        this.EtherFinalBalance = 0;
+
         this.EtherFinalBalance = this.EtherFinalBalance + theWei;
 
         this.GetCurrencyInfo();
