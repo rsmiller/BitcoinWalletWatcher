@@ -7,17 +7,29 @@
     <h5 class="coinbalance2">{{EtherFinalBalance}} wei ({{CurrencySymbol}}{{EtherPrice}})</h5>
     <div style="clear: both;">
       <div *ngFor="let wallet of Wallets; let index = index">
-        <mat-form-field>
-          <mat-label>Wallet Address</mat-label>
-          <input matInput id="wallet-{{index}}" [(ngModel)]="wallet.address">
-        </mat-form-field>
-        <mat-form-field>
-          <mat-label>Wallet Type</mat-label>
-          <mat-select [(ngModel)]="wallet.type" placeholder="Select Coin">
-            <mat-option value="Bitcoin">Bitcoin</mat-option>
-            <mat-option value="Ethereum">Ethereum</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div class="row">
+            <div class="col-12 col-sm-6 col-lg-6">
+              <mat-form-field>
+                <mat-label>Wallet Address</mat-label>
+                <input matInput id="wallet-{{index}}" [(ngModel)]="wallet.address">
+              </mat-form-field>
+            </div>
+            <div class="col-8 col-sm-4 col-lg-4">
+              <mat-form-field>
+                <mat-label>Wallet Type</mat-label>
+                <mat-select [(ngModel)]="wallet.type" placeholder="Select Coin">
+                  <mat-option value="Bitcoin">Bitcoin</mat-option>
+                  <mat-option value="Ethereum">Ethereum</mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-4 col-sm-2 col-lg-2" style="text-align: center;">
+              <button mat-raised-button color="warn" (click)="RemoveWallet(index)" cdkFocusInitial type="button"><i class="material-icons">delete</i></button>
+            </div>
+            
+        </div>
+        
+        <hr />
       </div>
     </div>
     <div>
@@ -36,9 +48,8 @@
     </div>
     <div mat-dialog-actions style="margin-top: 15px; margin-bottom: 15px; text-align: center;">
       <div class="button-row">
-        <button mat-raised-button color="accent" (click)="AddWallet()" cdkFocusInitial type="button">Add Wallet</button> <button mat-raised-button color="primary" (click)="GetAddressInfo()" cdkFocusInitial type="button">Get Wallet Info</button>
+        <button mat-raised-button color="accent" (click)="AddWallet()" cdkFocusInitial type="button">Add Wallet</button> <button mat-raised-button color="primary" (click)="GetAddressInfo()" cdkFocusInitial type="button" [disabled]="!validForm()">Get Wallet Info</button>
       </div>
     </div>
-    
   </div>
 </div>

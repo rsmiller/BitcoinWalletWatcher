@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient, HttpHeaders  } from '@angular/common/http';
 
-import {AddressStorage, BitcoinAddressInfo, ExchangeRate, EthereumExchange, Wallet, EthereumAddressInfo } from './../../models/Main'
+import {AddressStorage, BitcoinAddressInfo, ExchangeRate, EthereumExchange, Wallet, EthereumAddressInfo } from './../../models/Main';
 
 @Component({
   selector: 'app-home',
@@ -18,6 +18,7 @@ export class HomeComponent {
 
   public BitcoinFinalBalance: number = 0;
   public EtherFinalBalance: number = 0;
+  public NonDumbEtherFinalBalance: number = 0;
 
   public StartingMonetaryAmount: string = "$0";
   public MonetaryAmount: string = '$0';
@@ -62,6 +63,45 @@ export class HomeComponent {
 
       localStorage.setItem("btc_w_w", JSON.stringify(storageInfo));
     }
+
+    this.allowSubmit = true;
+  }
+
+  public RemoveWallet(index: number)
+  {
+    console.log(index);
+    let buffer = new Array<Wallet>();
+
+    for(let i=0;i<this.Wallets.length; i++)
+    {
+      if(i != index)
+      {
+        buffer.push(this.Wallets[i]);
+      }
+    }
+
+    this.Wallets = buffer;
+
+    if (typeof(Storage) !== "undefined") 
+    {
+      var storageInfo = new AddressStorage();
+      storageInfo.currency_symbol = this.CurrencySymbol;
+      storageInfo.currency = this.Currency;
+      storageInfo.wallets = this.Wallets;
+
+      this.Storage = storageInfo;
+
+      localStorage.setItem("btc_w_w", JSON.stringify(storageInfo));
+    }
+
+    this.BitcoinFinalBalance = 0;
+    this.EtherFinalBalance = 0;
+    this.NonDumbEtherFinalBalance = 0;
+
+    for(let i=0; i< this.Wallets.length; i++)
+    {
+      this.GetWalletInfo(this.Wallets[i].address, this.Wallets[i].type);
+    }
   }
 
   public GetAddressInfo()
@@ -84,6 +124,8 @@ export class HomeComponent {
     }
 
     this.DoTicker();
+
+    this.allowSubmit = false;
   }
 
   public GetWallet()
@@ -124,8 +166,27 @@ export class HomeComponent {
     }
   }
   
+  public GetWeiFromExchange(wei: string)
+  {
+    let position = wei.indexOf("00", 1);
+    return Number(wei.substring(0, position));
+  }
+
+  public ConvertWeiToNonDumbNumber(wei: string)
+  {
+    let weiNumber = Number(wei);
+    let theWei = weiNumber/10e17;
+
+    return theWei;
+  }
+
   public GetWalletInfo(address: string, type: string)
   {
+    if(address == "" || address == null)
+    {
+      return;
+    }
+
     if(type == "Bitcoin" && address.substr(0, 2) != "0x")
     {
       this._HttpClient.get<BitcoinAddressInfo>('https://blockchain.info/rawaddr/' + address + '?limit=20').subscribe(result => {
@@ -141,9 +202,11 @@ export class HomeComponent {
     if(type == "Ethereum" && address.substr(0, 2) == "0x")
     {      
       this._HttpClient.get<EthereumAddressInfo>('https://api.etherscan.io/api?module=account&action=balance&address=' + address + '&blocktype=blocks&apikey=S6GHNR83G57HYW6G2ICQ6E43K6MQ7NAY8A').subscribe(result => {
-      let position = result.result.indexOf("00", 1);
-      let wei = Number(result.result.substring(0, position));
-      this.EtherFinalBalance = this.EtherFinalBalance + wei;
+        
+        this.NonDumbEtherFinalBalance = this.ConvertWeiToNonDumbNumber(result.result);
+
+        let theWei = this.GetWeiFromExchange(result.result);
+        this.EtherFinalBalance = this.EtherFinalBalance + theWei;
 
         this.GetCurrencyInfo();
       }, error => {
@@ -211,8 +274,6 @@ export class HomeComponent {
         'Access-Control-Allow-Origin': '*'
       });
 
-      let convertedWei = this.EtherFinalBalance / 10000000;
-
       this._HttpClient.get<EthereumExchange>('https://api.coincap.io/v2/markets?baseSymbol=ETH&quoteSymbol=' + this.Currency).subscribe(result => {
         let price = 1;
 
@@ -236,7 +297,7 @@ export class HomeComponent {
 
 
         
-        let converted = Number(price.toFixed(2)) * convertedWei;
+        let converted = Number(price.toFixed(2)) * this.NonDumbEtherFinalBalance;
         let bufferPrice = Number(converted.toFixed(2));
        
         if(this.EtherPrice != bufferPrice)
@@ -274,7 +335,7 @@ export class HomeComponent {
 
     if(this.Currency == 'USD')
     {
-      this.CurrencySymbol = this.ExchangeRate.USD.symbol;
+      this.CurrencySymbol = "$";
     }
 
     if(this.Currency == 'AUD')
@@ -343,7 +404,21 @@ export class HomeComponent {
         }
 
         self.GetCurrencyInfo();
+
+        self.allowSubmit = true;
       }, 20000);
     }
+  }
+
+  private allowSubmit: boolean = false;
+
+  public validForm()
+  {
+    if(this.Wallets.length == 0)
+    {
+      return false;
+    }
+
+    return this.allowSubmit;
   }
 }

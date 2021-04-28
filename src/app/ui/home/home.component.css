@@ -82,3 +82,16 @@
     filter: blur(0);
   }
 }
+
+.mat-raised-button
+{
+  min-width: auto;
+}
+
+hr{
+  border-color: #673ab7;
+  margin-top: 10px; 
+  margin-bottom: 30px;
+  margin-left: 30%;
+  margin-right: 30%;
+}
